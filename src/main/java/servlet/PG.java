@@ -17,7 +17,7 @@ import java.sql.Statement;
 @WebServlet(name = "PG", urlPatterns = "/PG")
 public class PG extends HttpServlet {
 
-    public static BasicDataSource connectionPool;
+    private BasicDataSource connectionPool;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -30,25 +30,29 @@ public class PG extends HttpServlet {
         //System.out.println(url);
 
         try {
-            String uri = System.getenv("DATABASE_URL");
-            System.out.println(uri);
-            URI dbUri = new URI(uri);
-            String username = dbUri.getUserInfo().split(":")[0];
-            String password = dbUri.getUserInfo().split(":")[1];
+            //String uri = System.getenv("DATABASE_URL");
 
-            String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
-            System.out.println(dbUrl);
+            //System.out.println(uri);
+            //URI dbUri = new URI(uri);
+            //String username = dbUri.getUserInfo().split(":")[0];
+            //String password = dbUri.getUserInfo().split(":")[1];
+            String uri = System.getenv("JDBC_DATABASE_URL");
+            String username = System.getenv("JDBC_DATABASE_USERNAME");
+            String password = System.getenv("JDBC_DATABASE_PASSWORD");
+
+            //String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
+            //System.out.println(dbUrl);
 
             connectionPool = new BasicDataSource();
 
-            if(dbUri.getUserInfo() != null) {
+            if(username != null) {
 
                 connectionPool.setUsername(username);
                 connectionPool.setPassword(password);
             }
 
             connectionPool.setDriverClassName("org.postgresql.Driver");
-            connectionPool.setUrl(dbUrl);
+            connectionPool.setUrl(uri);
             connectionPool.setInitialSize(2);
 
             //Connection connection = DriverManager.getConnection(dbUrl, username, "");

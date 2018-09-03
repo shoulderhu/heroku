@@ -7,18 +7,63 @@
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
     <context-param>
-        <param-name>db_driver</param-name>
-        <param-value>org.postgresql.Driver</param-value>
+        <description>initial size of the connection pool</description>
+        <param-name>POOL_SIZE</param-name>
+        <param-value>5</param-value>
     </context-param>
-    <context-param>
-        <param-name>db_url</param-name>
-        <param-value>jdbc:postgresql://</param-value>
-    </context-param>
-    <!-- Sets the initial size of the connection pool. -->
-    <context-param>
-        <param-name>db_pool_size</param-name>
-        <param-value>1</param-value>
-    </context-param>
+    <filter>
+        <filter-name>https</filter-name>
+        <filter-class>filter.HttpsFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>https</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <!--<filter>
+        <filter-name>rate</filter-name>
+        <filter-class>filter.RateFilter</filter-class>
+        <init-param>
+            <description>refill x tokens per second</description>
+            <param-name>token</param-name>
+            <param-value>10</param-value>
+        </init-param>
+        <init-param>
+            <description>bandwith limitation</description>
+            <param-name>capacity</param-name>
+            <param-value>50</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>rate</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>-->
+    <filter>
+        <filter-name>jsp</filter-name>
+        <filter-class>filter.JspFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>jsp</filter-name>
+        <url-pattern>*.jsp</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>ERROR</dispatcher>
+    </filter-mapping>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/WEB-INF/jsp/error/404.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>429</error-code>
+        <location>/WEB-INF/jsp/error/429.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/WEB-INF/jsp/error/500.jsp</location>
+    </error-page>
+    <error-page>
+        <location>/WEB-INF/jsp/error/error.jsp</location>
+    </error-page>
+
     <context-param>
         <param-name>html</param-name>
         <param-value>/WEB-INF/html</param-value>

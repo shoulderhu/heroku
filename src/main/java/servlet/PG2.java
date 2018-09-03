@@ -7,14 +7,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.net.URI;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-
-import static servlet.PG.connectionPool;
-
 
 @WebServlet(name = "PG2", urlPatterns = "/PG2")
 public class PG2 extends HttpServlet {
@@ -32,8 +30,8 @@ public class PG2 extends HttpServlet {
         //System.out.println(url);
 
         try {
+            Connection connection = ((DataSource) getServletContext().getAttribute("pool")).getConnection();
 
-            Connection connection = connectionPool.getConnection();
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM breadcrumb");
 
